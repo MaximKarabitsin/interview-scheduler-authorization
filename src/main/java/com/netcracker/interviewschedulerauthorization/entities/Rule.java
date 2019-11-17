@@ -9,7 +9,7 @@ public class Rule {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -24,16 +24,25 @@ public class Rule {
     private String condition;
 
     @Column(name = "effect", nullable = false)
-    private boolean effect;
+    private Boolean effect;
 
     public Rule() {
     }
 
-    public long getId() {
+    public Rule update(Rule rule) {
+        if (rule.name != null) name = rule.name;
+        if (rule.description != null) description = rule.description;
+        if (rule.target != null) target = rule.target;
+        if (rule.condition != null) condition = rule.condition;
+        if (rule.effect != null) effect = rule.effect;
+        return this;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -69,11 +78,11 @@ public class Rule {
         this.condition = condition;
     }
 
-    public boolean isEffect() {
+    public Boolean getEffect() {
         return effect;
     }
 
-    public void setEffect(boolean effect) {
+    public void setEffect(Boolean effect) {
         this.effect = effect;
     }
 }
