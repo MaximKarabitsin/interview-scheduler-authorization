@@ -30,12 +30,12 @@ public class RuleRESTController {
     }
 
     @PutMapping("{id}")
-    public void update(@PathVariable String id, @RequestBody Rule rule) {
+    public void updateById(@PathVariable String id, @RequestBody Rule rule) {
         ruleService.updateById(id, rule);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable String id){
+    public void deleteById(@PathVariable String id){
         ruleService.deleteById(id);
     }
 }

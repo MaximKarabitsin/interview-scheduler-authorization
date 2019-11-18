@@ -1,13 +1,17 @@
 package com.netcracker.interviewschedulerauthorization.services.impl;
 
 import com.netcracker.interviewschedulerauthorization.dao.RuleRepository;
+import com.netcracker.interviewschedulerauthorization.entities.Policy;
 import com.netcracker.interviewschedulerauthorization.entities.Rule;
+import com.netcracker.interviewschedulerauthorization.exceptions.BadRequestException;
 import com.netcracker.interviewschedulerauthorization.exceptions.NotFoundException;
 import com.netcracker.interviewschedulerauthorization.services.RuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RuleServiceImpl implements RuleService {
@@ -19,6 +23,16 @@ public class RuleServiceImpl implements RuleService {
     @Override
     public List<Rule> getAll() {
         return ruleRepository.findAll();
+    }
+
+    @Override
+    public Set<Rule> getByPolicy(Policy policy) {
+        return policy.getRules().stream()
+                .map(Rule::getId)
+                .distinct()
+                .map(ruleRepository::findById)
+                .map(x -> x.orElseThrow(BadRequestException::new))
+                .collect(Collectors.toSet());
     }
 
     @Override

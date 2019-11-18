@@ -29,6 +29,10 @@ public class Rule {
     public Rule() {
     }
 
+    public Rule(Long id) {
+        this.id = id;
+    }
+
     public Rule update(Rule rule) {
         if (rule.name != null) name = rule.name;
         if (rule.description != null) description = rule.description;
