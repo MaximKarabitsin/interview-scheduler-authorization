@@ -23,7 +23,9 @@ public class PolicyRESTController {
 
     @GetMapping("{id}")
     public Policy getById(@PathVariable String id) {
-        return policyService.getById(id);
+        Policy p = policyService.getById(id);
+        //p.getRules();
+        return p;
     }
 
     @PostMapping

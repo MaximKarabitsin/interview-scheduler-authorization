@@ -3,7 +3,9 @@ package com.netcracker.interviewschedulerauthorization.services.impl;
 import com.netcracker.interviewschedulerauthorization.dao.PolicyRepository;
 import com.netcracker.interviewschedulerauthorization.dao.RuleRepository;
 import com.netcracker.interviewschedulerauthorization.entities.Policy;
+import com.netcracker.interviewschedulerauthorization.entities.PolicySet;
 import com.netcracker.interviewschedulerauthorization.entities.Rule;
+import com.netcracker.interviewschedulerauthorization.exceptions.BadRequestException;
 import com.netcracker.interviewschedulerauthorization.exceptions.NotFoundException;
 import com.netcracker.interviewschedulerauthorization.services.PolicyService;
 import com.netcracker.interviewschedulerauthorization.services.RuleService;
@@ -30,6 +32,16 @@ public class PolicyServiceImpl implements PolicyService {
     }
 
     @Override
+    public Set<Policy> getByPolicySet(PolicySet policySet) {
+        return policySet.getPolicies().stream()
+                .map(Policy::getId)
+                .distinct()
+                .map(policyRepository::findById)
+                .map(x -> x.orElseThrow(BadRequestException::new))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
     public Policy getById(String id) {
         if (!id.matches("[0-9]+")) throw new NotFoundException();
         return policyRepository.findById(Long.parseLong(id)).orElseThrow(NotFoundException::new);
@@ -45,9 +57,7 @@ public class PolicyServiceImpl implements PolicyService {
     @Override
     public void updateById(String id, Policy policy) {
         policy.setRules(ruleService.getByPolicy(policy));
-
-policyRepository.save(getById(id).update(policy));
-
+        policyRepository.save(getById(id).update(policy));
     }
 
     @Override

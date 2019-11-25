@@ -5,10 +5,9 @@ import com.netcracker.interviewschedulerauthorization.intities.enums.CombineAlgo
 import javax.persistence.*;
 import java.util.Set;
 
-
 @Entity
-@Table(name = "policy")
-public class Policy {
+@Table(name = "policy_set")
+public class PolicySet {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "id")
@@ -28,20 +27,20 @@ public class Policy {
     private CombineAlgorithm algorithm;
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinTable(name = "policy_rules",
-            joinColumns = @JoinColumn(name = "policy_id"),
-            inverseJoinColumns = @JoinColumn(name = "rule_id"))
-    private Set<Rule> rules;
+    @JoinTable(name = "policy_set_policy",
+            joinColumns = @JoinColumn(name = "policy_set_id"),
+            inverseJoinColumns = @JoinColumn(name = "policy_id"))
+    private Set<Policy> policies;
 
-    public Policy() {
+    public PolicySet() {
     }
 
-    public Policy update(Policy policy) {
-        if (policy.name != null) name = policy.name;
-        if (policy.description != null) description = policy.description;
-        if (policy.target != null) target = policy.target;
-        if (policy.algorithm != null) algorithm = policy.algorithm;
-        if (policy.rules != null && !policy.rules.isEmpty()) rules = policy.rules;
+    public PolicySet update(PolicySet policySet) {
+        if (policySet.name != null) name = policySet.name;
+        if (policySet.description != null) description = policySet.description;
+        if (policySet.target != null) target = policySet.target;
+        if (policySet.algorithm != null) algorithm = policySet.algorithm;
+        if (policySet.policies != null && !policySet.policies.isEmpty()) policies = policySet.policies;
         return this;
     }
 
@@ -85,11 +84,11 @@ public class Policy {
         this.algorithm = algorithm;
     }
 
-    public Set<Rule> getRules() {
-        return rules;
+    public Set<Policy> getPolicies() {
+        return policies;
     }
 
-    public void setRules(Set<Rule> rules) {
-        this.rules = rules;
+    public void setPolicies(Set<Policy> policies) {
+        this.policies = policies;
     }
 }
