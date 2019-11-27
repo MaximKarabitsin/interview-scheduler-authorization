@@ -2,12 +2,15 @@ package com.netcracker.interviewschedulerauthorization.services;
 
 import com.netcracker.interviewschedulerauthorization.entities.Policy;
 import com.netcracker.interviewschedulerauthorization.entities.Rule;
+import com.netcracker.interviewschedulerauthorization.model.JSONResponse;
 
 import java.util.List;
 import java.util.Set;
 
 public interface RuleService {
-    List<Rule> getAll();
+    JSONResponse getAll();
+
+    JSONResponse getByPageAndSort(String page, String size, String sortBy, String sortDesc);
 
     Set<Rule> getByPolicy(Policy policy);
 
