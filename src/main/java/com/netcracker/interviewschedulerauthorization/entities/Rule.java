@@ -1,5 +1,7 @@
 package com.netcracker.interviewschedulerauthorization.entities;
 
+import com.netcracker.interviewschedulerauthorization.utils.Validator;
+
 import javax.persistence.*;
 
 @Entity
@@ -34,10 +36,10 @@ public class Rule {
     }
 
     public Rule update(Rule rule) {
-        if (rule.name != null) name = rule.name;
-        if (rule.description != null) description = rule.description;
-        if (rule.target != null) target = rule.target;
-        if (rule.condition != null) condition = rule.condition;
+        if (!Validator.isEmpty(rule.name)) name = rule.name;
+        if (!Validator.isEmpty(rule.description)) description = rule.description;
+        if (!Validator.isEmpty(rule.target)) target = rule.target;
+        if (!Validator.isEmpty(rule.condition)) condition = rule.condition;
         if (rule.effect != null) effect = rule.effect;
         return this;
     }

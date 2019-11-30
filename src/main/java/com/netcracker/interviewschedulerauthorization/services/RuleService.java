@@ -10,15 +10,15 @@ import java.util.Set;
 public interface RuleService {
     JSONResponse getAll();
 
-    JSONResponse getByPageAndSort(String page, String size, String sortBy, String sortDesc);
+    JSONResponse getByPageAndSort(int page, int size, String sortBy, boolean sortDesc);
 
     Set<Rule> getByPolicy(Policy policy);
 
-    Rule getById(String id);
+    Rule getById(long id);
 
     void add(Rule rule);
 
-    void updateById(String id, Rule rule);
+    void updateById(long id, Rule rule);
 
-    void deleteById(String id);
+    void deleteById(long id);
 }

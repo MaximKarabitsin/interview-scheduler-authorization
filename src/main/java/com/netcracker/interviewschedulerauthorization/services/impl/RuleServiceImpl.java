@@ -27,31 +27,25 @@ public class RuleServiceImpl implements RuleService {
     @Autowired
     private RuleRepository ruleRepository;
 
-    private ObjectMapper mapper = new ObjectMapper();
-
     @Override
     public JSONResponse getAll() {
-        Page<Rule> page = ruleRepository.findAll(Pageable.unpaged());
+        Page<Rule> page = ruleRepository.findAll(PageRequest.of(0, Integer.MAX_VALUE, Sort.by("id").descending()));
         return new JSONResponse(page.getTotalElements(), page.getContent());
     }
 
     @Override
-    public JSONResponse getByPageAndSort(String page, String size, String sortBy, String sortDesc) {
-        int pageNumber = Parser.toInteger(page).orElseThrow(BadRequestException::new);
-        int pageSize = Parser.toInteger(size).orElseThrow(BadRequestException::new);
-        if (--pageNumber<0) throw new BadRequestException();
+    public JSONResponse getByPageAndSort(int page, int size, String sortBy, boolean sortDesc) {
         Sort sort;
-        if(sortBy != null && !sortBy.isEmpty()) {
-            boolean sortDescending = Parser.toBoolean(sortDesc).orElseThrow(BadRequestException::new);
+        if (sortBy != null && !sortBy.isEmpty()) {
             sort = Sort.by(sortBy);
-            if (sortDescending) {
+            if (sortDesc) {
                 sort = sort.descending();
             }
         } else {
-            sort = Sort.unsorted();
+            sort = Sort.by("id").descending();
         }
-        Page<Rule> pageRules = ruleRepository.findAll(PageRequest.of(pageNumber,pageSize,sort));
-        return new JSONResponse(pageRules.getTotalElements(),pageRules.getContent());
+        Page<Rule> pageRules = ruleRepository.findAll(PageRequest.of(page, size, sort));
+        return new JSONResponse(pageRules.getTotalElements(), pageRules.getContent());
     }
 
     @Override
@@ -65,9 +59,8 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public Rule getById(String id) {
-        if (!id.matches("[0-9]+")) throw new NotFoundException();
-        return ruleRepository.findById(Long.parseLong(id)).orElseThrow(NotFoundException::new);
+    public Rule getById(long id) {
+        return ruleRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @Override
@@ -77,12 +70,12 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public void updateById(String id, Rule rule) {
+    public void updateById(long id, Rule rule) {
         ruleRepository.save(getById(id).update(rule));
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteById(long id) {
         ruleRepository.delete(getById(id));
     }
 }

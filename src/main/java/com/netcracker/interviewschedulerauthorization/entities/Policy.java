@@ -1,6 +1,7 @@
 package com.netcracker.interviewschedulerauthorization.entities;
 
 import com.netcracker.interviewschedulerauthorization.intities.enums.CombineAlgorithm;
+import com.netcracker.interviewschedulerauthorization.utils.Validator;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -37,9 +38,9 @@ public class Policy {
     }
 
     public Policy update(Policy policy) {
-        if (policy.name != null) name = policy.name;
-        if (policy.description != null) description = policy.description;
-        if (policy.target != null) target = policy.target;
+        if (!Validator.isEmpty(policy.name)) name = policy.name;
+        if (!Validator.isEmpty(policy.description)) description = policy.description;
+        if (!Validator.isEmpty(policy.target)) target = policy.target;
         if (policy.algorithm != null) algorithm = policy.algorithm;
         if (policy.rules != null && !policy.rules.isEmpty()) rules = policy.rules;
         return this;
