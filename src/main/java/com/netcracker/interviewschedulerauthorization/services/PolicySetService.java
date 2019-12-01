@@ -1,17 +1,18 @@
 package com.netcracker.interviewschedulerauthorization.services;
 
 import com.netcracker.interviewschedulerauthorization.entities.PolicySet;
-
-import java.util.List;
+import com.netcracker.interviewschedulerauthorization.model.JSONResponse;
 
 public interface PolicySetService {
-    List<PolicySet> getAll();
+    JSONResponse getAll();
 
-    PolicySet getById(String id);
+    JSONResponse getByPageAndSort(int page, int size, String sortBy, boolean sortDesc);
+
+    PolicySet getById(long id);
 
     void add(PolicySet policySet);
 
-    void updateById(String id, PolicySet policySet);
+    void updateById(long id, PolicySet policySet);
 
-    void deleteById(String id);
+    void deleteById(long id);
 }

@@ -3,12 +3,14 @@ package com.netcracker.interviewschedulerauthorization.services.impl;
 import com.netcracker.interviewschedulerauthorization.dao.PolicySetRepository;
 import com.netcracker.interviewschedulerauthorization.entities.PolicySet;
 import com.netcracker.interviewschedulerauthorization.exceptions.NotFoundException;
+import com.netcracker.interviewschedulerauthorization.model.JSONResponse;
 import com.netcracker.interviewschedulerauthorization.services.PolicyService;
 import com.netcracker.interviewschedulerauthorization.services.PolicySetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class PolicySetServiceImpl implements PolicySetService {
@@ -20,14 +22,29 @@ public class PolicySetServiceImpl implements PolicySetService {
     private PolicyService policyService;
 
     @Override
-    public List<PolicySet> getAll() {
-        return policySetRepository.findAll();
+    public JSONResponse getAll() {
+        Page<PolicySet> page = policySetRepository.findAll(PageRequest.of(0, Integer.MAX_VALUE, Sort.by("id").descending()));
+        return new JSONResponse(page.getTotalElements(), page.getContent());
     }
 
     @Override
-    public PolicySet getById(String id) {
-        if (!id.matches("[0-9]+")) throw new NotFoundException();
-        return policySetRepository.findById(Long.parseLong(id)).orElseThrow(NotFoundException::new);
+    public JSONResponse getByPageAndSort(int page, int size, String sortBy, boolean sortDesc) {
+        Sort sort;
+        if (sortBy != null && !sortBy.isEmpty()) {
+            sort = Sort.by(sortBy);
+            if (sortDesc) {
+                sort = sort.descending();
+            }
+        } else {
+            sort = Sort.by("id").descending();
+        }
+        Page<PolicySet> pageRules = policySetRepository.findAll(PageRequest.of(page, size, sort));
+        return new JSONResponse(pageRules.getTotalElements(), pageRules.getContent());
+    }
+
+    @Override
+    public PolicySet getById(long id) {
+        return policySetRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @Override
@@ -38,13 +55,13 @@ public class PolicySetServiceImpl implements PolicySetService {
     }
 
     @Override
-    public void updateById(String id, PolicySet policySet) {
+    public void updateById(long id, PolicySet policySet) {
         policySet.setPolicies(policyService.getByPolicySet(policySet));
         policySetRepository.save(getById(id).update(policySet));
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteById(long id) {
         policySetRepository.delete(getById(id));
     }
 }

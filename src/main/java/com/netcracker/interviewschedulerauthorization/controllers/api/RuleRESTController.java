@@ -9,8 +9,6 @@ import com.netcracker.interviewschedulerauthorization.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/rule")
 public class RuleRESTController {
@@ -50,7 +48,7 @@ public class RuleRESTController {
         if (Validator.isEmpty(rule.getDescription())) throw new BadRequestException();
         if (Validator.isEmpty(rule.getTarget())) throw new BadRequestException();
         if (Validator.isEmpty(rule.getCondition())) throw new BadRequestException();
-        if (rule.getEffect() == null)throw new BadRequestException();
+        if (rule.getEffect() == null) throw new BadRequestException();
         ruleService.add(rule);
     }
 

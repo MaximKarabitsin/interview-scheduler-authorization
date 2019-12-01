@@ -1,12 +1,13 @@
 package com.netcracker.interviewschedulerauthorization.entities;
 
 import com.netcracker.interviewschedulerauthorization.intities.enums.CombineAlgorithm;
+import com.netcracker.interviewschedulerauthorization.utils.Validator;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "policy_set")
+@Table(name = "policy_sets")
 public class PolicySet {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
@@ -27,7 +28,7 @@ public class PolicySet {
     private CombineAlgorithm algorithm;
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinTable(name = "policy_set_policy",
+    @JoinTable(name = "policy_sets_policies",
             joinColumns = @JoinColumn(name = "policy_set_id"),
             inverseJoinColumns = @JoinColumn(name = "policy_id"))
     private Set<Policy> policies;
@@ -36,9 +37,9 @@ public class PolicySet {
     }
 
     public PolicySet update(PolicySet policySet) {
-        if (policySet.name != null) name = policySet.name;
-        if (policySet.description != null) description = policySet.description;
-        if (policySet.target != null) target = policySet.target;
+        if (!Validator.isEmpty(policySet.name)) name = policySet.name;
+        if (!Validator.isEmpty(policySet.description)) description = policySet.description;
+        if (!Validator.isEmpty(policySet.target)) target = policySet.target;
         if (policySet.algorithm != null) algorithm = policySet.algorithm;
         if (policySet.policies != null && !policySet.policies.isEmpty()) policies = policySet.policies;
         return this;

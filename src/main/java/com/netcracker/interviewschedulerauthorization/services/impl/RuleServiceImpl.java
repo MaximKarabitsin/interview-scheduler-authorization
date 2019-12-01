@@ -1,7 +1,5 @@
 package com.netcracker.interviewschedulerauthorization.services.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.netcracker.interviewschedulerauthorization.dao.RuleRepository;
 import com.netcracker.interviewschedulerauthorization.entities.Policy;
 import com.netcracker.interviewschedulerauthorization.entities.Rule;
@@ -9,15 +7,12 @@ import com.netcracker.interviewschedulerauthorization.exceptions.BadRequestExcep
 import com.netcracker.interviewschedulerauthorization.exceptions.NotFoundException;
 import com.netcracker.interviewschedulerauthorization.model.JSONResponse;
 import com.netcracker.interviewschedulerauthorization.services.RuleService;
-import com.netcracker.interviewschedulerauthorization.utils.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 

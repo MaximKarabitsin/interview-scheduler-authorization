@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 @Entity
-@Table(name = "policy")
+@Table(name = "policies")
 public class Policy {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
@@ -29,7 +29,7 @@ public class Policy {
     private CombineAlgorithm algorithm;
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinTable(name = "policy_rules",
+    @JoinTable(name = "policies_rules",
             joinColumns = @JoinColumn(name = "policy_id"),
             inverseJoinColumns = @JoinColumn(name = "rule_id"))
     private Set<Rule> rules;

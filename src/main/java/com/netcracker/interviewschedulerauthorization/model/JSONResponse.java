@@ -1,8 +1,5 @@
 package com.netcracker.interviewschedulerauthorization.model;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-
 import java.util.List;
 
 public class JSONResponse {

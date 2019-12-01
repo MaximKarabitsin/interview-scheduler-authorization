@@ -4,7 +4,6 @@ import com.netcracker.interviewschedulerauthorization.entities.Policy;
 import com.netcracker.interviewschedulerauthorization.entities.Rule;
 import com.netcracker.interviewschedulerauthorization.model.JSONResponse;
 
-import java.util.List;
 import java.util.Set;
 
 public interface RuleService {

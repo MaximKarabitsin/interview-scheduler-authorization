@@ -7,11 +7,7 @@ import com.netcracker.interviewschedulerauthorization.services.PolicyService;
 import com.netcracker.interviewschedulerauthorization.utils.Parser;
 import com.netcracker.interviewschedulerauthorization.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/policy")
@@ -38,6 +34,7 @@ public class PolicyRESTController {
             return policyService.getByPageAndSort(pageNumber, pageSize, sortBy, sortDescending);
         }
     }
+
     @GetMapping("{id}")
     public Policy getById(@PathVariable String id) {
         Policy p = policyService.getById(Parser.toLong(id).orElseThrow(BadRequestException::new));
@@ -49,8 +46,8 @@ public class PolicyRESTController {
         if (Validator.isEmpty(policy.getName())) throw new BadRequestException();
         if (Validator.isEmpty(policy.getDescription())) throw new BadRequestException();
         if (Validator.isEmpty(policy.getTarget())) throw new BadRequestException();
-        if (policy.getAlgorithm() == null)throw new BadRequestException();
-        if (policy.getRules() == null || policy.getRules().isEmpty())throw new BadRequestException();
+        if (policy.getAlgorithm() == null) throw new BadRequestException();
+        if (policy.getRules() == null || policy.getRules().isEmpty()) throw new BadRequestException();
         policyService.add(policy);
     }
 
