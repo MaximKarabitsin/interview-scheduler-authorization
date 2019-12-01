@@ -1,7 +1,20 @@
 # interview-scheduler-authorization
 
-## HTTP request examples
 
+## Docker
+
+```
+mvn clean install
+docker build -t <name-images:tag> .
+docker run --name <name-container> -p 8091:8091 <name-images>
+
+or docker compose with front and db
+```
+
+
+
+
+## HTTP request examples
 ### Rule
 
 ``` 
@@ -29,15 +42,3 @@ fetch('/api/policy/1', {method: 'PUT', headers: {'Content-Type': 'application/js
 fetch('/api/policy/1', {method: 'DELETE'}).then(console.log)
 ```
 
-## Docker
-
-```
-# application.properties
-spring.datasource.url=jdbc:postgresql://host.docker.internal:5432/interviewsdb_dev
-
-# command
-mvn clean package
-docker build -t <name-images:tag> .
-docker run --name <name-container> -p 8080:8080 <name-images>
-
-```
