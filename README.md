@@ -4,7 +4,7 @@
 ## Getting started
 [docker-compose.yaml](https://gist.github.com/MaximKarabitsin/66cbb563d0d5711d085656bb8590c78f)
 
-###Installing
+### Installing
 
 Set property(spring.datasource.url) in application.properties
 
@@ -18,7 +18,7 @@ or
 docker push maximkarabitsin/interview-scheduler-authorization
 ```
 
-###Running
+### Running
 
 ```bash
 docker run --name <name-container> -p 8091:8091 <name-images>
