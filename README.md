@@ -2,7 +2,7 @@
 
 
 ## Getting started
-[docker-compose.yaml](https://gist.github.com/MaximKarabitsin/66cbb563d0d5711d085656bb8590c78f)
+[docker-compose.yml](https://gist.github.com/MaximKarabitsin/66cbb563d0d5711d085656bb8590c78f)
 
 ###Installing
 

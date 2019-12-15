@@ -37,7 +37,7 @@ public class SecurityAccessServiceImpl implements SecurityAccessService {
         return checkPolicySets(policySets, context);
     }
 
-    private Boolean checkPolicySets(List<PolicySet> list, SecurityAccessContext context) {
+    private boolean checkPolicySets(List<PolicySet> list, SecurityAccessContext context) {
         List<Boolean> results = list.stream()
                 .filter(x -> checkTarget(x, context))
                 .map(x -> checkPolicySet(x, context))
@@ -45,7 +45,7 @@ public class SecurityAccessServiceImpl implements SecurityAccessService {
                 .collect(Collectors.toList());
 
         if (results.isEmpty())
-            return null;
+            return false;
         else
             return CombineAlgorithm.PERMIT_IF_ALL_PERMITTED.combine(results);
     }
