@@ -3,28 +3,35 @@ package com.netcracker.interviewschedulerauthorization.entities;
 import com.netcracker.interviewschedulerauthorization.utils.Validator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "rules")
-public class Rule {
+public class Rule implements Targeter{
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "id")
     private Long id;
 
+    @NotBlank(message = "Name can't be empty")
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NotBlank(message = "Description can't be empty")
     @Column(name = "description", nullable = false)
     private String description;
 
+    @NotBlank(message = "Target can't be empty")
     @Column(name = "target", nullable = false)
     private String target;
 
+    @NotBlank(message = "Condition can't be empty")
     @Column(name = "condition", nullable = false)
     private String condition;
 
+    @NotNull(message = "Effect can't be empty")
     @Column(name = "effect", nullable = false)
     private Boolean effect;
 
@@ -68,6 +75,7 @@ public class Rule {
         this.description = description;
     }
 
+    @Override
     public String getTarget() {
         return target;
     }

@@ -2,6 +2,7 @@ package com.netcracker.interviewschedulerauthorization.services.impl;
 
 import com.netcracker.interviewschedulerauthorization.dao.PolicySetRepository;
 import com.netcracker.interviewschedulerauthorization.entities.PolicySet;
+import com.netcracker.interviewschedulerauthorization.entities.Rule;
 import com.netcracker.interviewschedulerauthorization.exceptions.NotFoundException;
 import com.netcracker.interviewschedulerauthorization.model.JSONResponse;
 import com.netcracker.interviewschedulerauthorization.services.PolicyService;
@@ -9,38 +10,28 @@ import com.netcracker.interviewschedulerauthorization.services.PolicySetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PolicySetServiceImpl implements PolicySetService {
 
-    @Autowired
-    private PolicySetRepository policySetRepository;
+    private final PolicySetRepository policySetRepository;
+    private final PolicyService policyService;
 
     @Autowired
-    private PolicyService policyService;
+    public PolicySetServiceImpl(PolicySetRepository policySetRepository, PolicyService policyService) {
+        this.policySetRepository = policySetRepository;
+        this.policyService = policyService;
+    }
 
     @Override
-    public JSONResponse getAll() {
-        Page<PolicySet> page = policySetRepository.findAll(PageRequest.of(0, Integer.MAX_VALUE, Sort.by("id").descending()));
+    public JSONResponse getByPageable(Pageable pageable) {
+        Page<PolicySet> page = policySetRepository.findAll(pageable);
         return new JSONResponse(page.getTotalElements(), page.getContent());
     }
 
-    @Override
-    public JSONResponse getByPageAndSort(int page, int size, String sortBy, boolean sortDesc) {
-        Sort sort;
-        if (sortBy != null && !sortBy.isEmpty()) {
-            sort = Sort.by(sortBy);
-            if (sortDesc) {
-                sort = sort.descending();
-            }
-        } else {
-            sort = Sort.by("id").descending();
-        }
-        Page<PolicySet> pageRules = policySetRepository.findAll(PageRequest.of(page, size, sort));
-        return new JSONResponse(pageRules.getTotalElements(), pageRules.getContent());
-    }
 
     @Override
     public PolicySet getById(long id) {

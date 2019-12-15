@@ -5,37 +5,29 @@ import com.netcracker.interviewschedulerauthorization.exceptions.BadRequestExcep
 import com.netcracker.interviewschedulerauthorization.model.JSONResponse;
 import com.netcracker.interviewschedulerauthorization.services.RuleService;
 import com.netcracker.interviewschedulerauthorization.utils.Parser;
-import com.netcracker.interviewschedulerauthorization.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/rule")
 public class RuleRESTController {
 
+    private final RuleService ruleService;
+
     @Autowired
-    private RuleService ruleService;
-
-
-    @GetMapping
-    public JSONResponse getAll(@RequestParam(required = false) String page,
-                               @RequestParam(required = false) String size,
-                               @RequestParam(required = false) String sortBy,
-                               @RequestParam(required = false) String sortDesc) {
-        if (page == null) {
-            return ruleService.getAll();
-        } else {
-            int pageNumber = Parser.toInteger(page).orElseThrow(BadRequestException::new);
-            int pageSize = Parser.toInteger(size).orElseThrow(BadRequestException::new);
-            boolean sortDescending = false;
-            if (--pageNumber < 0) throw new BadRequestException();
-            if (sortBy != null && !sortBy.isEmpty()) {
-                sortDescending = Parser.toBoolean(sortDesc).orElseThrow(BadRequestException::new);
-            }
-            return ruleService.getByPageAndSort(pageNumber, pageSize, sortBy, sortDescending);
-        }
+    public RuleRESTController(RuleService ruleService) {
+        this.ruleService = ruleService;
     }
 
+    @GetMapping
+    public JSONResponse getAll(@PageableDefault(page = 0, size = Integer.MAX_VALUE, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ruleService.getByPageable(pageable);
+    }
 
     @GetMapping("{id}")
     public Rule getById(@PathVariable String id) {
@@ -43,12 +35,7 @@ public class RuleRESTController {
     }
 
     @PostMapping
-    public void add(@RequestBody Rule rule) {
-        if (Validator.isEmpty(rule.getName())) throw new BadRequestException();
-        if (Validator.isEmpty(rule.getDescription())) throw new BadRequestException();
-        if (Validator.isEmpty(rule.getTarget())) throw new BadRequestException();
-        if (Validator.isEmpty(rule.getCondition())) throw new BadRequestException();
-        if (rule.getEffect() == null) throw new BadRequestException();
+    public void add(@Valid @RequestBody Rule rule) {
         ruleService.add(rule);
     }
 

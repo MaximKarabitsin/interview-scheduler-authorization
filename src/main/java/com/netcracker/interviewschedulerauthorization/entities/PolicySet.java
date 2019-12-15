@@ -4,29 +4,37 @@ import com.netcracker.interviewschedulerauthorization.intities.enums.CombineAlgo
 import com.netcracker.interviewschedulerauthorization.utils.Validator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
 @Table(name = "policy_sets")
-public class PolicySet {
+public class PolicySet implements Targeter{
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "id")
     private Long id;
 
+    @NotBlank(message = "Name can't be empty")
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NotBlank(message = "Description can't be empty")
     @Column(name = "description", nullable = false)
     private String description;
 
+    @NotBlank(message = "Target can't be empty")
     @Column(name = "target", nullable = false)
     private String target;
 
+    @NotNull(message = "Combine algorithm can't be empty")
     @Enumerated(EnumType.STRING)
     @Column(name = "combine_algorithm", nullable = false)
     private CombineAlgorithm algorithm;
 
+    @NotEmpty(message = "Policies can't be empty")
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinTable(name = "policy_sets_policies",
             joinColumns = @JoinColumn(name = "policy_set_id"),
@@ -69,6 +77,7 @@ public class PolicySet {
         this.description = description;
     }
 
+    @Override
     public String getTarget() {
         return target;
     }

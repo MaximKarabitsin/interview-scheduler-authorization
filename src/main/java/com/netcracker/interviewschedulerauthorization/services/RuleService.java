@@ -3,13 +3,12 @@ package com.netcracker.interviewschedulerauthorization.services;
 import com.netcracker.interviewschedulerauthorization.entities.Policy;
 import com.netcracker.interviewschedulerauthorization.entities.Rule;
 import com.netcracker.interviewschedulerauthorization.model.JSONResponse;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Set;
 
 public interface RuleService {
-    JSONResponse getAll();
-
-    JSONResponse getByPageAndSort(int page, int size, String sortBy, boolean sortDesc);
+    JSONResponse getByPageable(Pageable pageable);
 
     Set<Rule> getByPolicy(Policy policy);
 

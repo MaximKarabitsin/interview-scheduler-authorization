@@ -2,11 +2,11 @@ package com.netcracker.interviewschedulerauthorization.services;
 
 import com.netcracker.interviewschedulerauthorization.entities.PolicySet;
 import com.netcracker.interviewschedulerauthorization.model.JSONResponse;
+import org.springframework.data.domain.Pageable;
 
 public interface PolicySetService {
-    JSONResponse getAll();
+    JSONResponse getByPageable(Pageable pageable);
 
-    JSONResponse getByPageAndSort(int page, int size, String sortBy, boolean sortDesc);
 
     PolicySet getById(long id);
 
