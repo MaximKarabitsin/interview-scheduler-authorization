@@ -1,44 +1,248 @@
 # interview-scheduler-authorization
 
 
-## Docker
+## Getting started
+[docker-compose.yaml](https://gist.github.com/MaximKarabitsin/66cbb563d0d5711d085656bb8590c78f)
 
-```
-mvn clean install
+###Installing
+
+Set property(spring.datasource.url) in application.properties
+
+```bash
+mvn -DskipTests=true clean package
 docker build -t <name-images:tag> .
-docker run --name <name-container> -p 8091:8091 <name-images>
+```
+or
 
-or docker compose with front and db
+```bash
+docker push maximkarabitsin/interview-scheduler-authorization
+```
+
+###Running
+
+```bash
+docker run --name <name-container> -p 8091:8091 <name-images>
+```
+
+
+
+## Security access API
+**POST**
+
+*URL:*
+```
+/api/access
+```
+
+*data:*   
+```json
+{
+    "subject": {
+        "field1": "value1",
+        "field2": "value2",
+        "field": {
+                "field1": "value1",
+                "field2": "value2"
+            }
+    },
+    "object": {
+        "type": "type",
+        "field1": "value1",
+        "field2": "value2",
+        "field": {
+                "field1": "value1",
+                "field2": "value2"
+            }
+    },
+    "action": "EDIT"
+}
 ```
 
 
 
 
-## HTTP request examples
+## Management API
 ### Rule
+**GET**
 
-``` 
-# GET
+*URL:*    
+```
+/api/rule?page={page}&size={size}&sort={sortBy},{ASC/DESC}
+```
 
-# POST
-fetch('/api/rule', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name: 'test', description: 'desc', target:'1 == 1',condition: 'true', effect: true})}).then(console.log)
+**POST**
 
-# PUT
-fetch('/api/rule/1', {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id:1,name: 'ttt', target:'2 == 1', effect: true})}).then(console.log)
+*URL:*
+```
+/api/rule
+```
 
-# DELETE
-fetch('/api/rule/1', {method: 'DELETE'}).then(console.log)
+*data:*   
+```json
+{
+    "name": "name",
+    "description": "description",
+    "target": "target",
+    "condition": "condition",
+    "effect": "true/false"
+}
+```
+
+**PUT**
+
+*URL:*
+```
+/api/rule/{id}
+```
+
+*data:*
+```json
+{
+    "name": "name",
+    "description": "description",
+    "target": "target",
+    "condition": "condition",
+    "effect": "true/false"
+}
+```
+
+**DELETE**
+
+*URL:*
+```
+/api/rule/{id}
 ```
 
 ### Policy
+**GET**
+
+*URL:*    
 ```
-# POST
-fetch('/api/policy', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name: 'test', description: 'desc', target:'1 != 0', algorithm:'ALLOWED_IF_ALL_ALLOWED', rules:[{id:'65536'}, {id:'4'}, {id:'3'}]})}).then(console.log)
-
-# PUT
-fetch('/api/policy/1', {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name: 'ttttest', target:'8 != 0', algorithm:'ALLOWED_IF_ALL_ALLOWED', rules:[{id:'65536'}, {id:'4'}]})}).then(console.log)
-
-#DELETE
-fetch('/api/policy/1', {method: 'DELETE'}).then(console.log)
+/api/policy?page={page}&size={size}&sort={sortBy},{ASC/DESC}
 ```
 
+**POST**
+
+*URL:*
+```
+/api/policy
+```
+
+*data:*  
+```json
+{
+    "name": "name",
+    "description": "description",
+    "target": "target",
+    "algorithm": "algorithm",
+    "rules": [{
+                "id": "id"
+            },
+            {
+                "id": "id"
+            },
+            {
+                "id": "id"
+            }]
+}
+```
+
+####PUT
+
+*URL:*
+```
+/api/policy/{id}
+```
+
+*data:*  
+```json
+{
+    "name": "name",
+    "description": "description",
+    "target": "target",
+    "algorithm": "algorithm",
+    "rules": [{
+                "id": "id"
+            },
+            {
+                "id": "id"
+            },
+            {
+                "id": "id"
+            }]
+}
+```
+
+**DELETE**
+
+*URL:*
+```
+/api/policy/{id}
+```
+
+### PolicySet
+**GET**
+
+*URL:*    
+```
+/api/policyset?page={page}&size={size}&sort={sortBy},{ASC/DESC}
+```
+
+**POST**
+
+*URL:*
+```
+/api/policyset
+```
+
+*data:*  
+```json
+{
+    "name": "name",
+    "description": "description",
+    "target": "target",
+    "algorithm": "algorithm",
+    "policies": [{
+                "id": "id"
+            },
+            {
+                "id": "id"
+            },
+            {
+                "id": "id"
+            }]
+}
+```
+
+####PUT
+
+*URL:*
+```
+/api/policyset/{id}
+```
+
+*data:*  
+```json
+{
+    "name": "name",
+    "description": "description",
+    "target": "target",
+    "algorithm": "algorithm",
+    "policies": [{
+                "id": "id"
+            },
+            {
+                "id": "id"
+            },
+            {
+                "id": "id"
+            }]
+}
+```
+
+**DELETE**
+
+*URL:*
+```
+/api/policyset/{id}
+```
