@@ -5,49 +5,37 @@ import com.netcracker.interviewschedulerauthorization.exceptions.BadRequestExcep
 import com.netcracker.interviewschedulerauthorization.model.JSONResponse;
 import com.netcracker.interviewschedulerauthorization.services.PolicySetService;
 import com.netcracker.interviewschedulerauthorization.utils.Parser;
-import com.netcracker.interviewschedulerauthorization.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/policyset")
 public class PolicySetRESTController {
 
+    private final PolicySetService policySetService;
+
     @Autowired
-    private PolicySetService policySetService;
+    public PolicySetRESTController(PolicySetService policySetService) {
+        this.policySetService = policySetService;
+    }
 
     @GetMapping
-    public JSONResponse getAll(@RequestParam(required = false) String page,
-                               @RequestParam(required = false) String size,
-                               @RequestParam(required = false) String sortBy,
-                               @RequestParam(required = false) String sortDesc) {
-        if (page == null) {
-            return policySetService.getAll();
-        } else {
-            int pageNumber = Parser.toInteger(page).orElseThrow(BadRequestException::new);
-            int pageSize = Parser.toInteger(size).orElseThrow(BadRequestException::new);
-            boolean sortDescending = false;
-            if (--pageNumber < 0) throw new BadRequestException();
-            if (sortBy != null && !sortBy.isEmpty()) {
-                sortDescending = Parser.toBoolean(sortDesc).orElseThrow(BadRequestException::new);
-            }
-            return policySetService.getByPageAndSort(pageNumber, pageSize, sortBy, sortDescending);
-        }
+    public JSONResponse getAll(@PageableDefault(page = 0, size = Integer.MAX_VALUE, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return policySetService.getByPageable(pageable);
     }
 
     @GetMapping("{id}")
     public PolicySet getById(@PathVariable String id) {
-        PolicySet p = policySetService.getById(Parser.toLong(id).orElseThrow(BadRequestException::new));
-        return p;
+        return policySetService.getById(Parser.toLong(id).orElseThrow(BadRequestException::new));
     }
 
     @PostMapping
-    public void add(@RequestBody PolicySet policySet) {
-        if (Validator.isEmpty(policySet.getName())) throw new BadRequestException();
-        if (Validator.isEmpty(policySet.getDescription())) throw new BadRequestException();
-        if (Validator.isEmpty(policySet.getTarget())) throw new BadRequestException();
-        if (policySet.getAlgorithm() == null) throw new BadRequestException();
-        if (policySet.getPolicies() == null || policySet.getPolicies().isEmpty()) throw new BadRequestException();
+    public void add(@Valid @RequestBody PolicySet policySet) {
         policySetService.add(policySet);
     }
 

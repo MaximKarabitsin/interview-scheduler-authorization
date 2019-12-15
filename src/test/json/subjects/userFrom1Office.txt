@@ -1,0 +1,7 @@
+{
+    "name": "Max",
+    "roles": ["USER"],
+    "office": {
+        "id": "1"
+    }
+}

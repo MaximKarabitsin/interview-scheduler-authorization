@@ -10,6 +10,7 @@ import com.netcracker.interviewschedulerauthorization.services.RuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -19,28 +20,17 @@ import java.util.stream.Collectors;
 @Service
 public class RuleServiceImpl implements RuleService {
 
-    @Autowired
-    private RuleRepository ruleRepository;
+    private final RuleRepository ruleRepository;
 
-    @Override
-    public JSONResponse getAll() {
-        Page<Rule> page = ruleRepository.findAll(PageRequest.of(0, Integer.MAX_VALUE, Sort.by("id").descending()));
-        return new JSONResponse(page.getTotalElements(), page.getContent());
+    @Autowired
+    public RuleServiceImpl(RuleRepository ruleRepository) {
+        this.ruleRepository = ruleRepository;
     }
 
     @Override
-    public JSONResponse getByPageAndSort(int page, int size, String sortBy, boolean sortDesc) {
-        Sort sort;
-        if (sortBy != null && !sortBy.isEmpty()) {
-            sort = Sort.by(sortBy);
-            if (sortDesc) {
-                sort = sort.descending();
-            }
-        } else {
-            sort = Sort.by("id").descending();
-        }
-        Page<Rule> pageRules = ruleRepository.findAll(PageRequest.of(page, size, sort));
-        return new JSONResponse(pageRules.getTotalElements(), pageRules.getContent());
+    public JSONResponse getByPageable(Pageable pageable) {
+        Page<Rule> page = ruleRepository.findAll(pageable);
+        return new JSONResponse(page.getTotalElements(), page.getContent());
     }
 
     @Override

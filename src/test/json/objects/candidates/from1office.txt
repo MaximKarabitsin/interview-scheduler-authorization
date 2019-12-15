@@ -1,0 +1,6 @@
+{
+    "type": "candidate",
+    "office": {
+        "id": "1"
+    }
+}

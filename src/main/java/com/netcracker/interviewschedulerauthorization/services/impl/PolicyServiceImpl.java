@@ -11,6 +11,7 @@ import com.netcracker.interviewschedulerauthorization.services.RuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -20,32 +21,22 @@ import java.util.stream.Collectors;
 @Service
 public class PolicyServiceImpl implements PolicyService {
 
-    @Autowired
-    private PolicyRepository policyRepository;
+    private final PolicyRepository policyRepository;
+    private final RuleService ruleService;
 
     @Autowired
-    private RuleService ruleService;
+    public PolicyServiceImpl(PolicyRepository policyRepository, RuleService ruleService) {
+        this.policyRepository = policyRepository;
+        this.ruleService = ruleService;
+    }
+
 
     @Override
-    public JSONResponse getAll() {
-        Page<Policy> page = policyRepository.findAll(PageRequest.of(0, Integer.MAX_VALUE, Sort.by("id").descending()));
+    public JSONResponse getByPageable(Pageable pageable) {
+        Page<Policy> page = policyRepository.findAll(pageable);
         return new JSONResponse(page.getTotalElements(), page.getContent());
     }
 
-    @Override
-    public JSONResponse getByPageAndSort(int page, int size, String sortBy, boolean sortDesc) {
-        Sort sort;
-        if (sortBy != null && !sortBy.isEmpty()) {
-            sort = Sort.by(sortBy);
-            if (sortDesc) {
-                sort = sort.descending();
-            }
-        } else {
-            sort = Sort.by("id").descending();
-        }
-        Page<Policy> pageRules = policyRepository.findAll(PageRequest.of(page, size, sort));
-        return new JSONResponse(pageRules.getTotalElements(), pageRules.getContent());
-    }
 
     @Override
     public Set<Policy> getByPolicySet(PolicySet policySet) {
